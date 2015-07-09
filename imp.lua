@@ -1,6 +1,15 @@
 
 local M = {}
 
+local function _assign(old, new, k)
+    local otype = type(old[k])
+    local ntype = type(new[k])
+    if (otype == 'thread' or otype == 'userdata') or (ntype == 'thread' or ntype == 'userdata') then
+        print(string.format('warning: old or new attr %s type be thread or userdata', k))
+    end
+    old[k] = new[k]
+end
+
 local function _replace(old, new, repeat_tbl)
     if repeat_tbl[old] then
         return
@@ -25,13 +34,12 @@ local function _replace(old, new, repeat_tbl)
         else
             if type(old[k]) ~= type(new[k]) then
                 print(string.format('warning: attr %s old type no equal new type!!!', k))
-                old[k] = new[k]
-
+                _assign(old, new, k)
             else
                 if type(old[k]) == 'table' then
                     _replace(old[k], new[k], repeat_tbl)
                 else
-                    old[k] = new[k]
+                    _assign(old, new, k)
                 end
 
             end
