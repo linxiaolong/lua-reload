@@ -69,5 +69,39 @@ function M.reload(mod)
     return old
 end
 
+local functor = {}
+M.functor = functor
+functor.__index = functor
+
+function functor.new(func, mod, ...)
+    local self = {}
+    self.func = func
+    self.mod = mod
+    local arg_len = select('#', ...)
+    local arg1 = select(1, ...)
+    if arg1 or arg_len > 1 then
+        self.args = table.pack(...)
+    end
+    setmetatable(self, functor)
+    return self
+end
+
+function functor:get()
+    if self.mod then
+        return self.mod[self.func]
+    else
+        return self.func
+    end
+end
+
+function functor:call(...)
+    local func = self:get()
+    if self.args then
+        return func(table.unpack(self.args), ...)
+    else
+        return func(...)
+    end
+end
+
 return M
 

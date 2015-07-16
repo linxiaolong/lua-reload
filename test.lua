@@ -1,10 +1,11 @@
 
 local M = {}
 
-M.a = 5
+--test normal
+M.a = 555
 
 function M.b(i, j)
-    print('5', i, j)
+    print('555', i, j)
 end
 
 M.d = 'ABCDEF'
@@ -26,6 +27,7 @@ B = {
 C = 7
 }
 
+--test class
 local cl = {}
 M.cl = cl
 cl.__index = cl
